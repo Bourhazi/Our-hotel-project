@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUUj3wjqT85aji4lgy0zc6J_ckPlm1piY&callback=initMap"></script>
+    <script type="text/javascript">
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map_div'), {
+                zoom: 15,
+                center: {
+                    lat: 31.6295,
+                    lng: -7.9811
+                } // Set the initial map center
+            });
+
+            var locations = [{
+                    lat: 31.6295,
+                    lng: -7.9811,
+                    name: 'Hôtel La Mamounia'
+                }
+
+            ];
+
+            locations.forEach(function (location) {
+                var marker = new google.maps.Marker({
+                        position: {
+                            lat: 31.6295,
+                            lng: -7.9811
+                        },
+                        map: map,
+                        title: 'Hôtel La Mamounia'
+                    });
+
+            });
+        }
+    </script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #f8f8f8;
+        }
+
+        .navbar {
+            background-color: #333;
+            border: none;
+        }
+
+        .navbar-brand {
+            color: #fff;
+        }
+
+        .navbar-inverse .navbar-toggle {
+            border-color: #fff;
+        }
+
+        .navbar-inverse .navbar-toggle:hover,
+        .navbar-inverse .navbar-toggle:focus {
+            background-color: #333;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .btn-success {
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+        }
+
+        .btn-success:hover,
+        .btn-success:focus,
+        .btn-success:active {
+            background-color: #4cae4c;
+            border-color: #3c903c;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .alert-danger {
+            background-color: #d9534f;
+            border-color: #d9534f;
+            color: #fff;
+        }
+
+        .alert-info {
+            background-color: #5bc0de;
+            border-color: #46b8da;
+            color: #fff;
+        }
+
+        #map_div {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/reservation}">Reservation</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <!-- Alerts -->
+            <div th:if="${param.echec}" class="alert alert-danger">
+                La date d'arrivée doit être inférieure à la date de départ !!
+            </div>
+            <div th:if="${param.echec1}" class="alert alert-danger">
+                Cette chambre est déjà réservée dans ce délai, veuillez entrer une autre date s'il vous plaît!
+            </div>
+            <div th:if="${param.success1}" class="alert alert-info">
+                Votre vérification s'est bien déroulée. Veuillez vérifier votre email pour télécharger le bon de réservation.
+            </div>
+            <div th:if="${param.echec2}" class="alert alert-danger">
+                Votre réservation a échoué ou vous vérifie pas la réservation au temps!!
+            </div>
+
+            <!-- Reservation Form -->
+            <h1 class="text-center">Reservation</h1>
+            <form th:action="@{/reservation/submitReservation}" method="post">
+                <div class="form-group">
+                    <label class="control-label" for="dateArrive">Date d'arrivée</label>
+                    <input id="dateArrive" type="date" name="dateArrive" class="form-control" required autofocus="autofocus" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="dateDepart">Date de Depart</label>
+                    <input id="dateDepart" name="dateDepart" type="date" class="form-control" required autofocus="autofocus" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="Categorie">Catégorie</label>
+                    <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        <select class="form-control" id="Categorie" name="categorieId">
+                            <option selected>Choose...</option>
+                            <option th:each="category : ${listeCategories}" th:value="${category.id}" th:text="${category.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Reserver</button>
+                </div>
+            </form>
+
+            <!-- Google Map -->
+            <div id="map_div"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        crossorigin="anonymous"></script>
+</body>
+</html>

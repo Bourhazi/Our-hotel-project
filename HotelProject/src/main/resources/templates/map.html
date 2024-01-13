@@ -1,0 +1,32 @@
+<html>
+<head>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUUj3wjqT85aji4lgy0zc6J_ckPlm1piY&callback=initMap"></script>
+  <script type="text/javascript">
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map_div'), {
+        zoom: 10,
+        center: {lat: 37.4232, lng: -122.0853} // Set the initial map center
+      });
+
+      var locations = [
+        {lat: 37.4232, lng: -122.0853, name: 'Work'},
+        {lat: 37.4289, lng: -122.1697, name: 'University'},
+        {lat: 37.6153, lng: -122.3900, name: 'Airport'},
+        {lat: 37.4422, lng: -122.1731, name: 'Shopping'}
+      ];
+
+      locations.forEach(function(location) {
+        var marker = new google.maps.Marker({
+          position: {lat: location.lat, lng: location.lng},
+          map: map,
+          title: location.name
+        });
+      });
+    }
+  </script>
+</head>
+
+<body>
+<div id="map_div" style="width: 400px; height: 300px"></div>
+</body>
+</html>
